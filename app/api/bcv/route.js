@@ -5,7 +5,7 @@ import { verifyBankIP } from '@/lib/security';
 export async function GET() {
   if (process.env.NODE_ENV === 'production') {
     return NextResponse.json({}, { status: 404 });
-  }01
+  }
   const isValidIP = verifyBankIP();
   /*
   if (!isValidIP) {
