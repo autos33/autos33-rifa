@@ -5,6 +5,8 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { banco, monto, telefono, cedula } = body;
+    console.log(banco, monto, telefono, cedula);
+    console.log(typeof banco, typeof monto, typeof telefono, typeof cedula)
     if (!banco || !monto || !telefono || !cedula) {
       return NextResponse.json(
         { success: false, message: 'Faltan campos obligatorios' },
