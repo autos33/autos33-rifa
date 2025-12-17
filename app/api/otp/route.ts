@@ -14,6 +14,7 @@ export async function POST(request: Request) {
       );
     }
     const result = await generateOtp({ banco, monto, telefono, cedula });
+    console.log(result)
     
     if (result.code === '202' || result.success === true) {
       return NextResponse.json({

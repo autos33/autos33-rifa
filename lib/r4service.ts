@@ -127,6 +127,7 @@ export const generateOtp = async (params: OtpRequest): Promise<OtpResponse> => {
     });
 
     const data: OtpResponse = await response.json();
+    console.log(data)
     return data;
 
   } catch (error) {
