@@ -66,7 +66,7 @@ export function TerminosModal() {
               <Button className="mx-2" onClick={() => setModalTerminos(false)}>
                 Aceptar y Continuar
               </Button>
-              <Button variant="outline" className="mx-2" onClick={() => window.history.back()}>
+              <Button variant="outline" className="mx-2" onClick={() => {window.location.href = "https://www.google.com"}}>
                 Cerrar
               </Button>
             </div>

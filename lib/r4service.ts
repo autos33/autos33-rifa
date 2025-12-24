@@ -136,7 +136,7 @@ export const generateOtp = async (params: OtpRequest): Promise<OtpResponse> => {
 };
 
 export const processDebitoInmediato = async (params: DebitoRequest): Promise<DebitoResponse> => {
-  const endpoint = '/Debitolnmediato';
+  const endpoint = '/DebitoInmediato';
   const url = `${process.env.R4_API_URL}${endpoint}`;
   const dataToSign = `${params.banco}${params.cedula}${params.telefono}${params.monto}${params.otp}`;
   const secretKey = process.env.R4_COMMERCE_TOKEN || '';
