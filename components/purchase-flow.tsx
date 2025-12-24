@@ -1123,12 +1123,12 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
                       <span className="font-bold text-gray-700">Mensaje:</span> {respuestaPago.message}
                     </p>
                     <div className="flex items-center justify-between w-full">
-                      <p className="text-gray-700 text-md font-medium flex items-center">
+                      <p className="text-gray-700 text-md font-medium justify-start">
                         <span className="font-bold text-gray-700 mr-2">Referencia (Últimos 8):</span> {respuestaPago.reference}
                       </p>
                       <button
                         onClick={() => { navigator.clipboard.writeText(respuestaPago.reference ?? ""); }}
-                        className="inline-flex items-center justify-center h-8 px-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600 transition-colors duration-200 shadow-md"
+                        className="transition-transform active:scale-90 duration-150 ease-in-out inline-flex items-center justify-center h-8 px-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600 shadow-md ml-2"
                       >
                         <Copy className="h-4 w-4" />
                       </button>
