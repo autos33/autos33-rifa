@@ -66,6 +66,7 @@ export async function POST(request: Request) {
     }
 
   } catch (error) {
+    console.log("Resultado -> ", error)
     return NextResponse.json(
       { success: false, message: 'Error interno de comunicación' },
       { status: 500 }
