@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import Loader from "@/components/loader"
+import ReservationTimer from '@/components/ReservationTimer';
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -101,6 +102,7 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
   const [Feedback, setFeedback] = useState("");
   const [idReserva, setIdReserva] = useState("");
   const [BoletosReservadosLista, setBoletosReservadosLista] = useState<any[]>([]);
+  const [fechaCompraBoletos, setFechaCompraBoletos] = useState<string | number>();
   
   const formatMonto = (amount: number) => {
     if (isNaN(amount) || amount < 0) {
@@ -240,6 +242,12 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
       setFeedback("Error al reservar los boletos, por favor, Intentelo denuevo más tarde");
       return false;
     } else {
+      if (data && data.length > 0) {
+          const fechaInicio = new Date(data[0].fecha_compra);
+          const tiempoExtraMs = 590000; // 9 minutos 50 segundos
+          const fechaExpiracionMs = fechaInicio.getTime() + tiempoExtraMs;
+          setFechaCompraBoletos(fechaExpiracionMs);
+      }
       setFeedback("");
       return true;
     }
@@ -393,6 +401,7 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
       e.preventDefault();
       if (validateOTPData()) {
           setFeedback("");  
+          setFechaCompraBoletos(undefined);
           setmodalConfirmacionOTP(true);
 
           try {
@@ -483,8 +492,8 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
   }
 
   const renderStepIndicator = () => (
-    <div className="flex items-center justify-center mb-8">
-      <div className="flex items-center space-x-4">
+    <div className="flex items-center justify-center mb-4">
+      <div className="flex items-center space-x-4 mb-4">
         {[1, 2, 3].map((step) => (
           <div key={step} className="flex items-center">
             <div
@@ -499,6 +508,16 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
             {step < 3 && <div className={`w-12 h-0.5 mx-2 ${step < currentStep ? "bg-primary" : "bg-muted"}`} />}
           </div>
         ))}
+      </div>
+    </div>
+  )
+
+  const renderTiempoRestante = () => (
+    <div className="flex items-center justify-center mb-8">
+      <div className="flex items-center space-x-4">
+        {fechaCompraBoletos && (
+          <ReservationTimer expiryTimestamp={fechaCompraBoletos} />
+        )}
       </div>
     </div>
   )
@@ -985,6 +1004,11 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
       </div>
 
       {renderStepIndicator()}
+
+      {fechaCompraBoletos !== undefined && (
+        renderTiempoRestante()
+      )}
+
 
       <div className="grid lg:grid-cols-3 gap-8"> 
         {/* Main Content */}
