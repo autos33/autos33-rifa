@@ -407,14 +407,16 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
             });
             let json = await resp.json();
             if (json && json.status === "PENDIENTE") {
+              const idToCheck = json.id;
               let intentos = 0;
               const maxIntentos = 20;
               while (json.status === "PENDIENTE" && intentos < maxIntentos) {
                 await new Promise(resolve => setTimeout(resolve, 3000)); // 3 segundos antes de continuar
+                console.log("Vuelta numero: ", intentos, "id: ", idToCheck)
                 const checkResp = await fetch("/api/debito/check-estado", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ id: json.id })
+                  body: JSON.stringify({ id: idToCheck })
                 });
                 
                 json = await checkResp.json();

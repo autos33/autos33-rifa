@@ -13,9 +13,9 @@
     }
 
     const scrollToGanadores = () => {
-      const serviceSection = document.getElementById("ganadores")
-      if (serviceSection) {
-        serviceSection.scrollIntoView({ behavior: "smooth" })
+      const ganadoresSection = document.getElementById("ganadores")
+      if (ganadoresSection) {
+        ganadoresSection.scrollIntoView({ behavior: "smooth" })
       }
     }
 
@@ -62,7 +62,7 @@
               >
                 Ver Rifas
               </Button>
-              <Link href="#servicios">
+              <Link href="#ganadores">
                 <Button
                   variant="outline"
                   size="lg"
