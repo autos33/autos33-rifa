@@ -200,7 +200,6 @@ export const checkOperationStatus = async (params: ConsultaOpRequest): Promise<C
       },
       body: JSON.stringify(payload)
     });
-    console.log("Respuesta: ", response)
 
     const data: ConsultaOpResponse = await response.json();
     return data;

@@ -212,6 +212,14 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
       setBuyerData({...buyerData, ticketQuantity: newQuantity,});
     }
   }
+
+  const esNumeroValido = (text: string): boolean => {
+    const num = Number(text);
+    if (Number.isInteger(num) && !text.includes(".")) {
+      return true;
+    }
+    return false;
+  };
   
   async function reservarBoletos(cantidad:number, id_rifa:number) {
     const { data: boletos, error: errorBoletos } = await 
@@ -301,7 +309,8 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
     e.preventDefault()
     const isValid = await validateBuyerData();
     if (isValid) {
-      setCurrentStep(2)
+      setCurrentStep(2);
+      window.scrollTo(0, 0);
     }
   }
 
@@ -371,6 +380,7 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
           const json = await resp.json();
           if (json && json.originalCode === "202") {
             setCurrentStep(3);
+            window.scrollTo(0, 0);
           } else {
             setFeedback(json?.message || "No se pudo verificar el pago.");
           }
@@ -412,7 +422,6 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
               const maxIntentos = 20;
               while (json.status === "PENDIENTE" && intentos < maxIntentos) {
                 await new Promise(resolve => setTimeout(resolve, 3000)); // 3 segundos antes de continuar
-                console.log("Vuelta numero: ", intentos, "id: ", idToCheck)
                 const checkResp = await fetch("/api/debito/check-estado", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
@@ -553,8 +562,10 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
                   type="text"
                   value={buyerData.cedula}
                   onChange={(e) => {
-                    setBuyerData({ ...buyerData, cedula: e.target.value });
-                    setPaymentData({ ...paymentData, senderCedula: e.target.value })
+                    if (esNumeroValido(e.target.value)) {
+                      setBuyerData({ ...buyerData, cedula: e.target.value });
+                      setPaymentData({ ...paymentData, senderCedula: e.target.value })
+                    }
                   }}
                   required
                   maxLength={8}
@@ -583,7 +594,7 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
 
           <div className="grid md:grid-cols-3 gap-4">
             <div>
-              <Label htmlFor="phonePrefix">Prefijo *</Label>
+              <Label htmlFor="phonePrefix">Operadora *</Label>
               <Select
                 value={buyerData.phonePrefix}
                 onValueChange={(value) => {
@@ -612,8 +623,10 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
                 type="tel"
                 value={buyerData.phoneNumber}
                 onChange={(e) => {
-                  setBuyerData({ ...buyerData, phoneNumber: e.target.value });
-                  setPaymentData({ ...paymentData, senderPhone: e.target.value })
+                  if (esNumeroValido(e.target.value)) {
+                    setBuyerData({ ...buyerData, phoneNumber: e.target.value });
+                    setPaymentData({ ...paymentData, senderPhone: e.target.value })
+                  }
               }}
                 required
                 maxLength={7}
@@ -764,7 +777,7 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
               <div className="flex flex-row gap-1">
                 <Select
                   value={paymentData.prefijoTelefono}
-                  onValueChange={(value) => setPaymentData({ ...paymentData, prefijoTelefono: value })}
+                  onValueChange={(value) => {setPaymentData({ ...paymentData, prefijoTelefono: value })}}
                   required
                 >
                   <SelectTrigger className={errors.phonePrefix ? "border-red-500 mt-2" : " mt-2"}>
@@ -784,7 +797,10 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
                   id="senderPhone"
                   type="text"
                   value={paymentData.senderPhone}
-                  onChange={(e) => setPaymentData({ ...paymentData, senderPhone: e.target.value })}
+                  onChange={(e) => {
+                    if (esNumeroValido(e.target.value)){
+                      setPaymentData({ ...paymentData, senderPhone: e.target.value })}}
+                    }
                   required
                   maxLength={7}
                   minLength={7}
@@ -799,7 +815,7 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
               <div className="flex flex-row gap-1">
                 <Select
                   value={paymentData.cedulaPrefijo}
-                  onValueChange={(value) => setPaymentData({ ...paymentData, cedulaPrefijo: value })}
+                  onValueChange={(value) => {setPaymentData({ ...paymentData, cedulaPrefijo: value })}}
                   required
                 >
                   <SelectTrigger className={errors.phonePrefix ? "border-red-500 mt-2" : " mt-2"}>
@@ -820,7 +836,10 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
                   id="senderPhone"
                   type="text"
                   value={paymentData.senderCedula}
-                  onChange={(e) => setPaymentData({ ...paymentData, senderCedula: e.target.value })}
+                  onChange={(e) =>{
+                    if (esNumeroValido(e.target.value)) {
+                      setPaymentData({ ...paymentData, senderCedula: e.target.value })}}
+                    }
                   required
                   maxLength={8}
                   minLength={7}
@@ -834,12 +853,12 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
             <span>{Feedback}</span>
           </div>
           <div className="flex space-x-4">
-            <Button type="button" variant="outline" onClick={() => setCurrentStep(1)} className="flex-1">
+            <Button type="button" variant="outline" onClick={() => {setCurrentStep(1); window.scrollTo(0, 0);}} className="flex-1">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Volver
             </Button>
             <Button type="submit" className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground">
-              Verificar Pago
+              Continuar
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
@@ -879,7 +898,7 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
             {errors.otp && <p className="text-red-500 text-sm mt-1">{errors.otp}</p>}
           </div>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button type="button" variant="outline" onClick={() => setCurrentStep(2)} className="flex-1">
+            <Button type="button" variant="outline" onClick={() => {setCurrentStep(2); window.scrollTo(0, 0);}} className="flex-1">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Volver
             </Button>
@@ -1105,7 +1124,7 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
                     </p>
                     <div className="flex items-center justify-between w-full">
                       <p className="text-gray-700 text-md font-medium flex items-center">
-                        <span className="font-bold text-gray-700 mr-2">Referencia:</span> {respuestaPago.reference}
+                        <span className="font-bold text-gray-700 mr-2">Referencia (Últimos 8):</span> {respuestaPago.reference}
                       </p>
                       <button
                         onClick={() => { navigator.clipboard.writeText(respuestaPago.reference ?? ""); }}
