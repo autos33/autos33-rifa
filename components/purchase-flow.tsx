@@ -1162,7 +1162,7 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
                   <button
                     onClick={() => {
                       setmodalConfirmacionOTP(false);
-                      window.location.href = `/boletos/${rifa.id}/${buyerData.cedulaPrefijo}${buyerData.cedula}`;
+                      window.location.href = `/boletos/${codificarId(rifa.id)}/${buyerData.cedulaPrefijo}${buyerData.cedula}`;
                     }}
                     className="px-6 py-2 font-semibold text-white bg-green-500 rounded-full hover:bg-green-600 transition-colors duration-200 shadow-md"
                   >
