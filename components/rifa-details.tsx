@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, DollarSign, Trophy, Users, Clock, Gift, Banknote } from "lucide-react"
 import Link from "next/link" 
 import { useState } from "react";
+import { codificarId } from "@/lib/hashids"
 
 interface Premio {
   id: number
@@ -203,7 +204,7 @@ export function RifaDetails({ rifa }: RifaDetailsProps) {
               */}
 
               {/* Buy Button */}
-              <Link href={`/comprar/${rifa.id}`}>
+              <Link href={`/comprar/${codificarId(rifa.id)}`}>
                 <Button
                   className="w-full bg-primary hover:bg-primary/70 text-primary-foreground text-lg py-3 min-h-15"
                   disabled={rifa.estado === "Próximamente"}
@@ -282,7 +283,7 @@ export function RifaDetails({ rifa }: RifaDetailsProps) {
                     ...prev,
                     errorCedula: null,
                   }))
-                  window.location.href = `/boletos/${rifa.id}/${datosConsultar.cedulaPrefijo}${datosConsultar.cedula}`
+                  window.location.href = `/boletos/${codificarId(rifa.id)}/${datosConsultar.cedulaPrefijo}${datosConsultar.cedula}`
                   }
                 }}
                 >

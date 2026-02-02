@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, ArrowRight, User, CreditCard, ClockArrowUp, AlertCircle, Copy, Check, Download, Share} from "lucide-react"
 import Image from "next/image"
+import { codificarId } from "@/lib/hashids"
 import { supabase } from "@/lib/supabase-client" 
 import SHA256 from "crypto-js/sha256"
 import { useToast } from "@/hooks/use-toast";
@@ -1097,7 +1098,7 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
               <button
                 onClick={() => {
                   setmodalConfirmacionCompra(false);
-                  window.location.href = `/boletos/${rifa.id}/${buyerData.cedulaPrefijo}${buyerData.cedula}`;
+                  window.location.href = `/boletos/${codificarId(rifa.id)}/${buyerData.cedulaPrefijo}${buyerData.cedula}`;
                 }}
                 className="px-6 py-2 font-bold text-white bg-green-500 rounded-full hover:bg-green-600 transition-colors duration-200 shadow-md"
               >

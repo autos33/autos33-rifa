@@ -4,6 +4,7 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { PurchaseFlow } from "@/components/purchase-flow"
 import { supabase } from "@/lib/supabase-client" 
+import { decodificarId } from "@/lib/hashids"
 
 interface RifaCompra {
   id: number
@@ -18,12 +19,18 @@ export default function ComprarPage({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const rifaId = Number(params.id)
+  const rifaId = decodificarId(params.id)
 
   useEffect(() => {
     const fetchRifaData = async () => {
       setIsLoading(true)
-      setError(null) 
+      setError(null)
+      if (rifaId === null) {
+        setIsLoading(false)
+        setError("El código de la rifa no es válido.")
+        window.location.href = "/" 
+        return
+      }
 
       const { data, error: dbError } = await supabase
         .from("Rifas")
@@ -44,7 +51,7 @@ export default function ComprarPage({ params }: { params: { id: string } }) {
       setIsLoading(false)
     }
 
-    if (!isNaN(rifaId) && rifaId > 0) {
+    if (rifaId !== null) {
       fetchRifaData()
     } else {
       setIsLoading(false)

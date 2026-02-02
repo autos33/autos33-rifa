@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, DollarSign, Banknote } from "lucide-react"
+import { codificarId } from "@/lib/hashids"
 import Link from "next/link"
 
 interface Rifa {
@@ -181,7 +182,7 @@ export function RifasSection() {
                         </div>
                       </div>
 
-                      <Link href={rifa.estado === "activa" ? `/rifa/${rifa.id}` : "#"}>
+                      <Link href={rifa.estado === "activa" ? `/rifa/${codificarId(rifa.id)}` : "#"}>
                         <Button
                           className="w-full bg-primary hover:bg-primary/80 text-primary-foreground text-lg py-3"
                           disabled={rifa.estado === "proximamente"}

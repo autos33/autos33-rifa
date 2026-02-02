@@ -5,6 +5,7 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { RifaDetails } from "@/components/rifa-details"
 import { supabase } from "@/lib/supabase-client" 
+import { decodificarId } from "@/lib/hashids"
 
 interface Premio {
   id: number
@@ -31,18 +32,24 @@ export default function RifaPage({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const rifaId = Number(params.id)
+  const rifaId = decodificarId(params.id)
 
   useEffect(() => {
     const fetchRifaData = async () => {
       setIsLoading(true)
       setError(null)
+      if (rifaId === null) {
+        setIsLoading(false)
+        setError("El código de la rifa no es válido.")
+        window.location.href = "/" 
+        return
+      }
 
       const { data: rifaData, error: rifaError } = await supabase
         .from("Rifas")
         .select("*")
         .eq("id", rifaId)
-        .single() // Espera un único registro
+        .single()
 
       if (!rifaData) {
         setIsLoading(false)
@@ -53,11 +60,6 @@ export default function RifaPage({ params }: { params: { id: string } }) {
       if (rifaError) {
         console.error("Error al obtener la rifa:", rifaError)
         setError("Error al cargar la información de la rifa.")
-        setIsLoading(false)
-        return
-      }
-
-      if (!rifaData) {
         setIsLoading(false)
         return
       }
@@ -86,11 +88,12 @@ export default function RifaPage({ params }: { params: { id: string } }) {
       setIsLoading(false)
     }
 
-    if (!isNaN(rifaId) && rifaId > 0) {
+    if (rifaId !== null) {
       fetchRifaData()
     } else {
+      // Manejo si el hash inicial estaba malformado
       setIsLoading(false)
-      setError("ID de rifa no válido.")
+      setError("Enlace de rifa inválido.")
     }
   }, [rifaId])
 

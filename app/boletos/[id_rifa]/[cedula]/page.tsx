@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge"
 import { CheckCircle, Download, Check, Copy, Loader2 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase-client" 
+import { codificarId } from "@/lib/hashids"
+import { decodificarId } from "@/lib/hashids"
 import Link from "next/link"
 
 interface Rifa {
@@ -34,7 +36,7 @@ interface ComprarPageParams {
 }
 
 export default function ComprarPage({ params }: ComprarPageParams) {
-  const rifaId = Number(params.id_rifa) 
+  const rifaId = decodificarId(params.id_rifa) 
   const cedulaComprador = params.cedula 
 
   const [rifa, setRifa] = useState<Rifa | null>(null)
@@ -47,8 +49,16 @@ export default function ComprarPage({ params }: ComprarPageParams) {
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
-    if (isNaN(rifaId) || rifaId <= 0 || !cedulaComprador) {
-      setError("Parámetros de rifa o cédula no válidos.")
+    // 3. Validación de seguridad
+    // Si rifaId es null, el hash era inválido.
+    if (rifaId === null) {
+      setError("El enlace de la rifa no es válido.")
+      setIsLoading(false)
+      return
+    }
+
+    if (!cedulaComprador) {
+      setError("No se especificó la cédula del comprador.")
       setIsLoading(false)
       return
     }
@@ -57,6 +67,7 @@ export default function ComprarPage({ params }: ComprarPageParams) {
       setIsLoading(true)
       setError(null)
 
+      // Aquí rifaId ya es seguro un 'number'
       const { data: rifaData, error: rifaError } = await supabase
         .from("Rifas")
         .select("id, titulo, precio, foto, fecha_culminacion, estado")
@@ -298,7 +309,7 @@ export default function ComprarPage({ params }: ComprarPageParams) {
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <Link href={`/rifa/${rifa.id}`} className="flex-1">
+                    <Link href={`/rifa/${codificarId(rifa.id)}`} className="flex-1">
                       <Button variant="outline" className="w-full bg-transparent">
                         Ver Rifa
                       </Button>
