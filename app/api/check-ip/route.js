@@ -2,9 +2,7 @@ import { NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  /*if (process.env.NODE_ENV === 'production') {
-    return NextResponse.json({}, { status: 404 });
-  }*/
+  
   try {
     const res = await fetch('https://api.ipify.org?format=json', {
       cache: 'no-store'
