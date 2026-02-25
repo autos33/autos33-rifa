@@ -102,43 +102,7 @@ export function RifaDetails({ rifa }: RifaDetailsProps) {
             </CardContent>
           </Card>
 
-          {/* Premios */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Trophy className="h-5 w-5 text-primary" />
-                <span>Premios de la Rifa</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid sm:grid-cols-2 gap-6">
-                {rifa.premios.map((premio, index) => (
-                  <div key={premio.id} className="border border-border rounded-lg p-4">
-                    <div className="relative h-32 mb-3 rounded-lg overflow-hidden">
-                      <img
-                        src={premio.foto_url || "/placeholder.svg"}
-                        alt={premio.titulo}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute top-2 left-2">
-                        <Badge variant="secondary" className="text-xs">
-                          {index + 1}° Premio
-                        </Badge>
-                      </div>
-                    </div>
-                    <h4 className="font-semibold text-card-foreground mb-2">{premio.titulo}</h4>
-                    <p className="text-sm text-muted-foreground">{premio.descripcion}</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Purchase Card */}
-          <Card className=""> {/*sticky top-20*/}
+          <Card className="block lg:hidden"> {/*sticky top-20*/}
             <CardHeader>
               <CardTitle className="text-center">Comprar Boletos</CardTitle>
             </CardHeader>
@@ -221,7 +185,200 @@ export function RifaDetails({ rifa }: RifaDetailsProps) {
             </CardContent>
           </Card>
 
-          <Card className="">
+          <Card className="block lg:hidden">
+            <CardHeader>
+              <CardTitle className="text-center">Mis Boletos</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <Label htmlFor="cedula">Cédula de Identidad *</Label>
+                <div className="flex flex-row gap-1">
+                  <Select
+                  value={datosConsultar.cedulaPrefijo}
+                  onValueChange={(value) => setDatosConsultar({ ...datosConsultar, cedulaPrefijo: value })}
+                  required
+                  >
+                  <SelectTrigger className={errorConsultar.errorPrefijoCedula ? "border-red-500 mt-2" : " mt-2"}>
+                    <SelectValue placeholder="Seleccionar" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem key={"V"} value={"V-"}>
+                    {"V"}
+                    </SelectItem>
+                    <SelectItem key={"E"} value={"E-"}>
+                    {"E"}
+                    </SelectItem>
+                  </SelectContent>
+                  </Select>
+                  <Input
+                  id="cedula"
+                  type="text"
+                  value={datosConsultar.cedula}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (/^\d*$/.test(value)) {
+                    setDatosConsultar({ ...datosConsultar, cedula: value });
+                    }
+                  }}
+                  required
+                  maxLength={8}
+                  minLength={7}
+                  placeholder="12345678"
+                  className={errorConsultar.errorCedula ? "border-red-500 mt-2" : " mt-2"}
+                  />
+                </div>
+                {errorConsultar.errorCedula && <p className="text-red-500 text-sm mt-1">{errorConsultar.errorCedula}</p>}
+              </div>
+                <Button
+                className="w-full bg-primary hover:bg-primary/70 text-primary-foreground text-lg py-3"
+                disabled={
+                  rifa.estado === "Próximamente" ||
+                  datosConsultar.cedula.length < 7 ||
+                  datosConsultar.cedula.length > 8
+                }
+                onClick={() => {
+                  if (datosConsultar.cedula.length < 7 || datosConsultar.cedula.length > 8) {
+                  setErrorConsultar((prev) => ({
+                    ...prev,
+                    errorCedula: "Cédula incorrecta",
+                  }))
+                  } else {
+                  setErrorConsultar((prev) => ({
+                    ...prev,
+                    errorCedula: null,
+                  }))
+                  window.location.href = `/boletos/${codificarId(rifa.id)}/${datosConsultar.cedulaPrefijo}${datosConsultar.cedula}`
+                  }
+                }}
+                >
+                Consultar
+                </Button>
+
+              <p className="mt-2 text-xs text-muted-foreground text-center">
+                Consulta tus boletos comprado solo ingresando tu cédula de indentidad
+              </p>
+            </CardContent>
+          </Card>
+          {/* Premios */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Trophy className="h-5 w-5 text-primary" />
+                <span>Premios de la Rifa</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid sm:grid-cols-2 gap-6">
+                {rifa.premios.map((premio, index) => (
+                  <div key={premio.id} className="border border-border rounded-lg p-4">
+                    <div className="relative h-32 mb-3 rounded-lg overflow-hidden">
+                      <img
+                        src={premio.foto_url || "/placeholder.svg"}
+                        alt={premio.titulo}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute top-2 left-2">
+                        <Badge variant="secondary" className="text-xs">
+                          {index + 1}° Premio
+                        </Badge>
+                      </div>
+                    </div>
+                    <h4 className="font-semibold text-card-foreground mb-2">{premio.titulo}</h4>
+                    <p className="text-sm text-muted-foreground">{premio.descripcion}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-6">
+          {/* Purchase Card */}
+          <Card className="hidden lg:block"> {/*sticky top-20*/}
+            <CardHeader>
+              <CardTitle className="text-center">Comprar Boletos</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* precio */}
+              <div className="text-center">
+                <div className="flex items-center justify-center space-x-2 mb-2">
+                  <Banknote className="h-6 w-6 text-primary" />
+                  <span className="text-3xl font-bold text-foreground">{rifa.precio}Bs</span>
+                </div>
+                <p className="text-muted-foreground">por boleto</p>
+              </div>
+
+              {/* Stats */}
+              <div className="space-y-4">
+                {/* 
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Users className="h-4 w-4 text-primary" />
+                    <span className="text-sm text-muted-foreground">Boletos vendidos</span>
+                  </div>
+                  <span className="font-semibold">{rifa.ticketsSold.toLocaleString()}</span>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Trophy className="h-4 w-4 text-primary" />
+                    <span className="text-sm text-muted-foreground">Boletos disponibles</span>
+                  </div>
+                  <span className="font-semibold text-primary">{remainingTickets.toLocaleString()}</span>
+                </div>
+                */}
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Calendar className="h-4 w-4 text-primary" />
+                    <span className="text-sm text-muted-foreground">Fecha del sorteo</span>
+                  </div>
+                  <span>
+                    {new Date(rifa.fecha_culminacion).toLocaleDateString("es-ES", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric"
+                    }).replace(/^(\d{2}) ([a-záéíóúñ]+) (\d{4})$/, "$1 de $2, $3")}
+                  </span>
+                </div>
+              </div>
+
+              {/* Progress */}
+              {/* 
+              <div>
+                <div className="flex justify-between text-sm text-muted-foreground mb-2">
+                  <span>Progreso de venta</span>
+                  <span>{progressPercentage}%</span>
+                </div>
+                <div className="w-full bg-muted rounded-full h-3">
+                  <div
+                    className="bg-primary h-3 rounded-full transition-all duration-300"
+                    style={{ width: `${progressPercentage}%` }}
+                  />
+                </div>
+              </div>
+              */}
+
+              {/* Buy Button */}
+              <Link href={`/comprar/${codificarId(rifa.id)}`}>
+                <Button
+                  className="w-full bg-primary hover:bg-primary/70 text-primary-foreground text-lg py-3 min-h-15"
+                  disabled={rifa.estado === "Próximamente"}
+                >
+                  {rifa.estado === "Próximamente" ? "Próximamente" : "Comprar Boletos"}
+                </Button>
+              </Link>
+
+              {rifa.estado === "Activa" && (
+                <p className="mt-2 text-xs text-muted-foreground text-center">
+                  Los boletos se asignan automáticamente al confirmar la compra
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="hidden lg:block">
             <CardHeader>
               <CardTitle className="text-center">Mis Boletos</CardTitle>
             </CardHeader>
