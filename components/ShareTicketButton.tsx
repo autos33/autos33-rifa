@@ -105,7 +105,7 @@ const ShareTicketButton: React.FC<ShareTicketButtonProps> = ({ rifa, boletos, ce
             // 3. Usar Web Share API con la URL pública
             await navigator.share({
                 title: `Mis boletos para la rifa: ${rifa.titulo}`,
-                text: `¡Mira mis boletos para la rifa del ${rifa.titulo}!`,
+                text: `¡Mira mis boletos para la rifa: ${rifa.titulo}!`,
                 url: url, // 🎯 URL del PDF subido
             });
             
