@@ -259,7 +259,7 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
     
     if (isValid) {
       try {
-        const montoEnvio = parseFloat(formatMonto(totalAmount));
+        const montoEnvio = formatMonto(totalAmount);
         const cedulaLimpia = buyerData.cedula.replace(/\D/g, '');
         // 1. CREAMOS EL PEDIDO ANTES DE QUE EL USUARIO ABRA SU BANCO
         const { data, error } = await supabase
@@ -707,7 +707,7 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
                   <span className="font-bold text-lg">{totalAmount}Bs</span>
                   <button
                     type="button"
-                    onClick={() => handleCopyField(totalAmount.toString(), 'monto')}
+                    onClick={() => handleCopyField(totalAmount.toFixed(2), 'monto')}
                     className="p-1.5 rounded-md bg-blue-100 hover:bg-blue-200 transition-all active:scale-90"
                     title="Copiar monto"
                   >
