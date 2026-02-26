@@ -22,11 +22,11 @@ export async function POST(request: Request) {
       .select('id, monto')
       .eq('cedula_cliente', IdCliente)
       .eq('estatus', 'pendiente')
-      .single();
+      .limit(1);
 
-    if (error || !pedido) {
+    if (error || !pedido || pedido.length === 0) {
       console.log(`Consulta rechazada: No se encontró pedido para la cédula ${IdCliente}`);
-      return NextResponse.json({ status: false }); // [cite: 149]
+      return NextResponse.json({ status: false });
     }
 
     console.log(`Consulta aprobada para la cédula ${IdCliente}`);

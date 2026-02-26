@@ -246,12 +246,39 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
   }
 
   const handleBuyerDataSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     setFeedback("");
     const isValid = await validateBuyerData();
+    
     if (isValid) {
-      setCurrentStep(2);
-      window.scrollTo(0, 0);
+      try {
+        const montoEnvio = parseFloat(formatMonto(totalAmount));
+        const cedulaLimpia = `${buyerData.cedulaPrefijo}${buyerData.cedula}`.replace(/[^A-Za-z0-9]/g, '');
+        // 1. CREAMOS EL PEDIDO ANTES DE QUE EL USUARIO ABRA SU BANCO
+        const { data, error } = await supabase
+          .from('Pedidos')
+          .insert({
+            cedula_cliente: cedulaLimpia,
+            monto: montoEnvio,
+            estatus: 'pendiente'
+            // Dejamos referencia y banco en blanco por ahora
+          })
+          .select('id')
+          .single();
+
+        if (error) {
+            setFeedback("Error preparando el pago. Intenta nuevamente.");
+            console.error(error);
+            return;
+        }
+
+        setPedidoId(data.id); // Guardamos el ID para el paso 3
+        setCurrentStep(2);
+        window.scrollTo(0, 0);
+
+      } catch (error) {
+        setFeedback("Error en el sistema. Inténtelo de nuevo.");
+      }
     }
   }
 
@@ -297,36 +324,27 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
       
       if (validatePaymentData()) {
         try {
-          const montoEnvio = parseFloat(formatMonto(totalAmount));
-          const cedulaLimpia = `${paymentData.cedulaPrefijo}${paymentData.senderCedula}`.replace(/[^A-Za-z0-9]/g, '');
           const telefonoLimpio = `${paymentData.prefijoTelefono}${paymentData.senderPhone}`;
 
-          // Insertamos en Supabase para que el Webhook lo encuentre
-          const { data, error } = await supabase
+          // 2. ACTUALIZAMOS EL PEDIDO EXISTENTE CON LA REFERENCIA Y EL BANCO
+          const { error } = await supabase
             .from('Pedidos')
-            .insert({
-              cedula_cliente: cedulaLimpia,
-              monto: montoEnvio,
+            .update({
               referencia_bancaria: paymentData.referencia,
               banco_emisor: paymentData.bank,
-              telefono_emisor: telefonoLimpio,
-              estatus: 'pendiente'
+              telefono_emisor: telefonoLimpio
             })
-            .select('id')
-            .single();
+            .eq('id', pedidoId); // Usamos el ID que guardamos en el Paso 1
 
           if (error) {
-            // Manejo del Unique Constraint (referencia duplicada)
             if (error.code === '23505') {
-              setFeedback("Esta referencia ya fue registrada para este banco. Verifica los datos.");
+                setFeedback("Esta referencia ya fue registrada. Verifica los datos.");
             } else {
-              setFeedback("Error guardando el reporte de pago. Intenta nuevamente.");
-              console.error(error);
+                setFeedback("Error guardando el comprobante. Intenta nuevamente.");
             }
             return;
           }
 
-          setPedidoId(data.id);
           setCurrentStep(3); // Pasar a la pantalla de espera
           window.scrollTo(0, 0);
 
