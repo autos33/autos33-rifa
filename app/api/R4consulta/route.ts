@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   try {
     // 1. Validar el token de autorización (UUID) que envía el banco [cite: 136]
     const authHeader = request.headers.get('Authorization');
-    const expectedToken = process.env.R4_COMMERCE_TOKEN || '';
+    const expectedToken = process.env.R4_WEBHOOK_UUID_TOKEN || '';
 
     if (!authHeader || authHeader !== expectedToken) {
       console.warn("Acceso denegado: Token inválido en /R4consulta");

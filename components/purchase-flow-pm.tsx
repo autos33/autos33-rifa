@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, ArrowRight, User, CreditCard, ClockArrowUp, Copy } from "lucide-react"
+import { ArrowLeft, ArrowRight, User, CreditCard, ClockArrowUp, Copy, Check } from "lucide-react"
 import Image from "next/image"
 import { codificarId } from "@/lib/hashids"
 import { supabase } from "@/lib/supabase-client" 
@@ -132,6 +132,13 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const totalAmount = buyerData.ticketQuantity * rifa.precio
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const handleCopyField = (text: string, fieldName: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(fieldName);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
 
   const formatMonto = (amount: number) => {
     if (isNaN(amount) || amount < 0) {
@@ -253,7 +260,7 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
     if (isValid) {
       try {
         const montoEnvio = parseFloat(formatMonto(totalAmount));
-        const cedulaLimpia = `${buyerData.cedulaPrefijo}${buyerData.cedula}`.replace(/[^A-Za-z0-9]/g, '');
+        const cedulaLimpia = buyerData.cedula.replace(/\D/g, '');
         // 1. CREAMOS EL PEDIDO ANTES DE QUE EL USUARIO ABRA SU BANCO
         const { data, error } = await supabase
           .from('Pedidos')
@@ -642,19 +649,77 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
       </CardHeader>
       <CardContent>
         {/* Descomentado y adaptado para que el usuario vea a dónde transferir */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <div className="flex items-start space-x-2">
-            <div>
-              <h3 className="font-semibold text-blue-800 mb-1">Paso 1: Realiza un Pago Movil a estos Datos</h3>
-              <p className="text-sm text-blue-700 mb-2">
-                <strong>Banco:</strong> R4 BANCO MICROFINANCIERO (0169)
-                <br />
-                <strong>Teléfono:</strong> 0414-9499194
-                <br />
-                <strong>RIF/Cédula:</strong> {paymentData.cedulaPrefijo}{paymentData.senderCedula}
-                <br />
-                <strong>Monto Exacto:</strong> {totalAmount}Bs
-              </p>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-6">
+          <div className="flex flex-col space-y-4">
+            <h3 className="font-semibold text-blue-800">Paso 1: Realiza un Pago Movil a estos Datos</h3>
+            
+            <div className="space-y-3 text-sm text-blue-900">
+              {/* BANCO (Sin botón de copiar porque normalmente se selecciona en una lista) */}
+              <div className="flex justify-between items-center border-b border-blue-100 pb-2">
+                <span className="font-medium">Banco:</span>
+                <span className="font-bold">R4 BANCO MICROFINANCIERO (0169)</span>
+              </div>
+
+              {/* TELÉFONO */}
+              <div className="flex justify-between items-center border-b border-blue-100 pb-2">
+                <span className="font-medium">Teléfono:</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold">0414-9499194</span>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyField('04149499194', 'telefono')}
+                    className="p-1.5 rounded-md bg-blue-100 hover:bg-blue-200 transition-all active:scale-90"
+                    title="Copiar teléfono"
+                  >
+                    {copiedField === 'telefono' ? (
+                      <Check className="w-4 h-4 text-green-600 animate-in zoom-in" />
+                    ) : (
+                      <Copy className="w-4 h-4 text-blue-600" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* CÉDULA */}
+              <div className="flex justify-between items-center border-b border-blue-100 pb-2">
+                <span className="font-medium">RIF/Cédula:</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold">{paymentData.cedulaPrefijo}{paymentData.senderCedula}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyField(`${paymentData.senderCedula}`, 'cedula')}
+                    className="p-1.5 rounded-md bg-blue-100 hover:bg-blue-200 transition-all active:scale-90"
+                    title="Copiar cédula"
+                  >
+                    {copiedField === 'cedula' ? (
+                      <Check className="w-4 h-4 text-green-600 animate-in zoom-in" />
+                    ) : (
+                      <Copy className="w-4 h-4 text-blue-600" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* MONTO */}
+              <div className="flex justify-between items-center">
+                <span className="font-medium">Monto Exacto:</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-lg">{totalAmount}Bs</span>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyField(totalAmount.toString(), 'monto')}
+                    className="p-1.5 rounded-md bg-blue-100 hover:bg-blue-200 transition-all active:scale-90"
+                    title="Copiar monto"
+                  >
+                    {copiedField === 'monto' ? (
+                      <Check className="w-4 h-4 text-green-600 animate-in zoom-in" />
+                    ) : (
+                      <Copy className="w-4 h-4 text-blue-600" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
@@ -754,10 +819,12 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
           </div>
 
           <div>
-            <Label htmlFor="referencia">Número de Referencia *</Label>
+            <Label htmlFor="referencia">Número de Referencia (Últimos 8 dígitos)*</Label>
             <Input
               id="referencia"
               type="text"
+              maxLength={8}
+              minLength={8}
               value={paymentData.referencia}
               onChange={(e) => {
                 if (esNumeroValido(e.target.value)) {
@@ -768,7 +835,7 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
               placeholder="Ej. 83736278"
               className={errors.referencia ? "border-red-500 mt-2" : " mt-2"}
             />
-            <p className="text-xs text-gray-500 mt-1">Escribe los dígitos numéricos de tu comprobante de pago.</p>
+            <p className="text-xs text-gray-500 mt-1">Escribe los últimos 8 dígitos de la referencia.</p>
             {errors.referencia && <p className="text-red-500 text-sm mt-1">{errors.referencia}</p>}
           </div>
 
