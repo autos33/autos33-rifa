@@ -66,31 +66,31 @@ const phonePrefixes = [
 ]
 
 const banks = [
-  { value: "0102", label: "BANCO DE VENEZUELA (0102)" },
-  { value: "0156", label: "100% BANCO (0156)" },
-  { value: "0172", label: "BANCAMIGA BANCO UNIVERSAL, C.A. (0172)" },
-  { value: "0114", label: "BANCARIBE (0114)" },
-  { value: "0171", label: "BANCO ACTIVO (0171)" },
-  { value: "0128", label: "BANCO CARONÍ (0128)" },
-  { value: "0163", label: "BANCO DEL TESORO (0163)" },
-  { value: "0175", label: "BANCO DIGITAL DE LOS TRABAJADORES (0175)" },
-  { value: "0115", label: "BANCO EXTERIOR (0115)" },
-  { value: "0151", label: "BANCO FONDO COMÚN (0151)" },
-  { value: "0105", label: "BANCO MERCANTIL (0105)" },
-  { value: "0191", label: "BANCO NACIONAL DE CREDITO (0191)" },
-  { value: "0138", label: "BANCO PLAZA (0138)" },
-  { value: "0137", label: "BANCO SOFITASA (0137)" },
-  { value: "0104", label: "BANCO VENEZOLANO DE CREDITO (0104)" },
-  { value: "0168", label: "BANCRECER (0168)" },
-  { value: "0134", label: "BANESCO (0134)" },
-  { value: "0177", label: "BANFANB (0177)" },
-  { value: "0146", label: "BANGENTE (0146)" },
-  { value: "0174", label: "BANPLUS (0174)" },
-  { value: "0108", label: "BBVA PROVINCIAL (0108)" },
-  { value: "0157", label: "DELSUR BANCO UNIVERSAL (0157)" },
-  { value: "0601", label: "INSTITUTO MUNICIPAL DE CREDITO POPULAR (0601)" },
-  { value: "0178", label: "N58 BANCO DIGITAL (0178)" },
-  { value: "0169", label: "R4 BANCO MICROFINANCIERO C.A. (0169)" },
+  { value: "102", label: "BANCO DE VENEZUELA (0102)" },
+  { value: "156", label: "100% BANCO (0156)" },
+  { value: "172", label: "BANCAMIGA BANCO UNIVERSAL, C.A. (0172)" },
+  { value: "114", label: "BANCARIBE (0114)" },
+  { value: "171", label: "BANCO ACTIVO (0171)" },
+  { value: "128", label: "BANCO CARONÍ (0128)" },
+  { value: "163", label: "BANCO DEL TESORO (0163)" },
+  { value: "175", label: "BANCO DIGITAL DE LOS TRABAJADORES (0175)" },
+  { value: "115", label: "BANCO EXTERIOR (0115)" },
+  { value: "151", label: "BANCO FONDO COMÚN (0151)" },
+  { value: "105", label: "BANCO MERCANTIL (0105)" },
+  { value: "191", label: "BANCO NACIONAL DE CREDITO (0191)" },
+  { value: "138", label: "BANCO PLAZA (0138)" },
+  { value: "137", label: "BANCO SOFITASA (0137)" },
+  { value: "104", label: "BANCO VENEZOLANO DE CREDITO (0104)" },
+  { value: "168", label: "BANCRECER (0168)" },
+  { value: "134", label: "BANESCO (0134)" },
+  { value: "177", label: "BANFANB (0177)" },
+  { value: "146", label: "BANGENTE (0146)" },
+  { value: "174", label: "BANPLUS (0174)" },
+  { value: "108", label: "BBVA PROVINCIAL (0108)" },
+  { value: "157", label: "DELSUR BANCO UNIVERSAL (0157)" },
+  { value: "601", label: "INSTITUTO MUNICIPAL DE CREDITO POPULAR (0601)" },
+  { value: "178", label: "N58 BANCO DIGITAL (0178)" },
+  { value: "169", label: "R4 BANCO MICROFINANCIERO C.A. (0169)" },
 ];
 
 export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
@@ -631,7 +631,7 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
               <p className="text-sm text-blue-700 mb-2">
                 <strong>Banco:</strong> R4 BANCO MICROFINANCIERO (0169)
                 <br />
-                <strong>Teléfono:</strong> 0414-9587323
+                <strong>Teléfono:</strong> 0414-9499194
                 <br />
                 <strong>RIF/Cédula:</strong> {paymentData.cedulaPrefijo}{paymentData.senderCedula}
                 <br />

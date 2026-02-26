@@ -77,7 +77,7 @@ export function Footer() {
               </li>
               <li className="flex items-center space-x-2 text-gray-400">
                 <Mail className="h-4 w-4" />
-                <span>autos33@gmail.com</span>
+                <span>ganaconautos33@gmail.com</span>
               </li>
               <li className="flex items-center space-x-2 text-gray-400">
                 <MapPin className="h-4 w-4" />
