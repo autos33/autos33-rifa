@@ -300,6 +300,9 @@ export default function ComprarPage({ params }: ComprarPageParams) {
                         }).replace(/^(\d{2}) ([a-záéíóúñ]+) (\d{4})$/, " $1 de $2, $3")}
                       </span>
                     </p>)}
+                    {!rifa.fecha_culminacion && (
+                      <p>• El sorteo se realizará el al vender la totalidad de los boletos</p>
+                    )}
                     <p>• El sorteo se realiza en base a los resultados de Super Gana</p>
                     <p>• Los números de boletos se asignan automáticamente</p>
                     <p>• El primer premio será el resultado de Super Gana 10:00 p.m.</p>
