@@ -39,7 +39,9 @@ export async function POST(request: Request) {
       .single();
 
     if (fetchError || !pedidoPendiente) {
-      console.warn(`Notificación rechazada: Ref ${Referencia} del banco ${BancoEmisor} no encontrada.`);
+      console.warn(`Notificación rechazada: Ref ${Referencia} del banco ${BancoEmisor} no encontrada ${referenciaCorta} ${bancoCorto}.`);
+      console.log(`Detalles del error:`, fetchError);
+      //await supabase.from('Pedidos').update({ estatus: 'rechazado' }).eq('id', pedidoPendiente.id);
       return NextResponse.json({ abono: false }); 
     }
 
