@@ -361,12 +361,28 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
       }
   }
 
-  // EFECTO POLLING: Revisa constantemente si el Webhook cambió el estado
   useEffect(() => {
     let interval: NodeJS.Timeout;
+    let intentos = 0;
+    const maxIntentos = 40; // 40 intentos de 3s = 120 segundos (2 minutos de espera máxima)
     
     if (currentStep === 3 && pedidoId) {
       interval = setInterval(async () => {
+        intentos++;
+
+        if (intentos >= maxIntentos) {
+          clearInterval(interval);
+          setRespuestaPago({
+            success: false,
+            status: "TIEMPO AGOTADO",
+            message: "No recibimos la confirmación del banco a tiempo. Verifica tu cuenta o intenta reportar la referencia nuevamente.",
+            reference: paymentData.referencia,
+            id: pedidoId
+          });
+          setmodalConfirmacionOTP(true);
+          return;
+        }
+
         const { data, error } = await supabase
           .from('Pedidos')
           .select('estatus')
@@ -376,7 +392,6 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
         if (data && data.estatus === 'pagado') {
           clearInterval(interval);
           
-          // El webhook confirmó el pago, aseguramos los boletos
           const boletosData = await fetchBoletos();
           if (boletosData && boletosData.length > 0) {
             const ids_numbers = boletosData.map(boleto => boleto.id);
@@ -395,11 +410,12 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
             setmodalConfirmacionOTP(true);
           }
         } else if (data && (data.estatus === 'rechazado' || data.estatus === 'reversado')) {
+          // El Webhook detectó un error (monto menor, red fallida) y cambió el estatus
           clearInterval(interval);
           setRespuestaPago({
             success: false,
             status: "RECHAZADO",
-            message: "El pago no pudo ser confirmado. Verifique los datos o sus fondos.",
+            message: "El pago fue rechazado. Verifique que el monto transferido sea el exacto o intente nuevamente.",
             reference: paymentData.referencia,
             id: pedidoId
           });
@@ -819,12 +835,12 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
           </div>
 
           <div>
-            <Label htmlFor="referencia">Número de Referencia (Últimos 8 dígitos)*</Label>
+            <Label htmlFor="referencia">Número de Referencia (Últimos 6 dígitos)*</Label>
             <Input
               id="referencia"
               type="text"
-              maxLength={8}
-              minLength={8}
+              maxLength={6}
+              minLength={6}
               value={paymentData.referencia}
               onChange={(e) => {
                 if (esNumeroValido(e.target.value)) {
@@ -835,7 +851,7 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
               placeholder="Ej. 83736278"
               className={errors.referencia ? "border-red-500 mt-2" : " mt-2"}
             />
-            <p className="text-xs text-gray-500 mt-1">Escribe los últimos 8 dígitos de la referencia.</p>
+            <p className="text-xs text-gray-500 mt-1">Escribe los últimos 6 dígitos de la referencia.</p>
             {errors.referencia && <p className="text-red-500 text-sm mt-1">{errors.referencia}</p>}
           </div>
 
