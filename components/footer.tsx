@@ -19,6 +19,7 @@ export function Footer() {
                 alt="Gana con Autos 33"
               />
             </Link>
+            <span className="text-gray-400 text-sm">RIF: J-50761249-0</span>
             </div>
             <p className="text-gray-400 mb-4 max-w-md">
               Tu plataforma confiable para participar en rifas de autos. Compra, vende y consigna con total seguridad y
@@ -72,7 +73,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li className="flex items-center space-x-2 text-gray-400">
                 <Phone className="h-4 w-4" />
-                <span>0414-0405551</span>
+                <span>0414-9587323</span>
               </li>
               <li className="flex items-center space-x-2 text-gray-400">
                 <Mail className="h-4 w-4" />
@@ -87,7 +88,9 @@ export function Footer() {
         </div>
 
         <div className="border-t border-border mt-8 pt-8 text-center text-gray-400">
-          <p>RIF J-123456789-0 Copyright © 2025 Gana con Autos 33.</p>
+            <p>
+            RIF J-50761249-0 Copyright © {new Date().getFullYear()} Gana con Autos 33.
+            </p>
           <p>Todos los derechos reservados.</p>
         </div>
       </div>

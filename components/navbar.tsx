@@ -37,7 +37,7 @@ export function Navbar() {
               Ganadores
             </Link>
             <div className="bg-primary hover:bg-primary/90 p-2 rounded-md font-medium text-base">
-              <Link href="https://api.whatsapp.com/send?phone=584143497259" className="text-white transition-colors">
+              <Link href="https://api.whatsapp.com/send?phone=584149587323" className="text-white transition-colors">
                 Contáctanos
               </Link>
             </div>
@@ -79,7 +79,7 @@ export function Navbar() {
               <div className="px-3 py-2">
                 <Button
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                  onClick={() => window.open("https://api.whatsapp.com/send?phone=584143497259")}
+                  onClick={() => window.open("https://api.whatsapp.com/send?phone=584149587323")}
                 >
                   Contáctanos
                 </Button>
