@@ -155,16 +155,18 @@ export function RifasSection() {
                               <span className="font-bold text-xl">{rifa.precio.toString()} Bs </span> por boleto
                             </span>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <span>
-                              <Calendar className="h-5 w-5 text-primary" />
-                              {new Date(rifa.fecha_culminacion).toLocaleDateString("es-ES", {
-                                day: "2-digit",
-                                month: "long",
-                                year: "numeric"
-                              }).replace(/^(\d{2}) ([a-záéíóúñ]+) (\d{4})$/, "$1 de $2, $3")}
-                            </span>
-                          </div>
+                          {rifa.fecha_culminacion && (
+                            <div className="flex items-center space-x-2">
+                              <span className="flex flex-row gap-3">
+                                <Calendar className="h-5 w-5 text-primary" />
+                                {new Date(rifa.fecha_culminacion).toLocaleDateString("es-ES", {
+                                  day: "2-digit",
+                                  month: "long",
+                                  year: "numeric"
+                                }).replace(/^(\d{2}) ([a-záéíóúñ]+) (\d{4})$/, "$1 de $2, $3")}
+                              </span>
+                            </div>
+                          )}
                         </div>
 
                         {/* Progress bar */}

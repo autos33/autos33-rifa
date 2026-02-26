@@ -291,14 +291,18 @@ export default function ComprarPage({ params }: ComprarPageParams) {
 
                   <div className="space-y-2 text-sm text-muted-foreground">
                     <p>• Puede volver a consultar estos números con la cédula ingresada<br></br><strong>{cedulaComprador}</strong></p>
-                    <p>• El sorteo se realizará el día <span> 
-                        {new Date(rifa.fecha_culminacion).toLocaleDateString("es-ES", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric"
+                    {rifa.fecha_culminacion && (
+                      <p>• El sorteo se realizará el día <span> 
+                          {new Date(rifa.fecha_culminacion).toLocaleDateString("es-ES", {
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric"
                         }).replace(/^(\d{2}) ([a-záéíóúñ]+) (\d{4})$/, " $1 de $2, $3")}
                       </span>
-                    </p> 
+                    </p>)}
+                    {!rifa.fecha_culminacion && (
+                      <p>• El sorteo se realizará el al vender la totalidad de los boletos</p>
+                    )}
                     <p>• El sorteo se realiza en base a los resultados de Super Gana</p>
                     <p>• Los números de boletos se asignan automáticamente</p>
                     <p>• El primer premio será el resultado de Super Gana 10:00 p.m.</p>

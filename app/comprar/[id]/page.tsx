@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { PurchaseFlow } from "@/components/purchase-flow"
+import { PurchaseFlowPM } from "@/components/purchase-flow-pm"
 import { supabase } from "@/lib/supabase-client" 
 import { decodificarId } from "@/lib/hashids"
 
@@ -108,7 +109,7 @@ export default function ComprarPage({ params }: { params: { id: string } }) {
     <div className="min-h-screen">
       <Navbar />
       <main className="pt-16">
-        <PurchaseFlow rifa={rifa} />
+        <PurchaseFlowPM rifa={rifa} />
       </main>
       <Footer />
     </div>
