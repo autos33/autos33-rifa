@@ -324,7 +324,6 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
       return true;
   }
 
-  // NUEVO FLUJO: Insertar en Supabase e iniciar Polling
   const handlePaymentSubmit: (e: React.FormEvent) => Promise<void> = async (e) => {
       e.preventDefault();
       setFeedback("");
@@ -364,7 +363,7 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
   useEffect(() => {
     let interval: NodeJS.Timeout;
     let intentos = 0;
-    const maxIntentos = 40; // 40 intentos de 3s = 120 segundos (2 minutos de espera máxima)
+    const maxIntentos = 40; // 2 minutos máximo
     
     if (currentStep === 3 && pedidoId) {
       interval = setInterval(async () => {
@@ -383,13 +382,15 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
           return;
         }
 
-        const { data, error } = await supabase
+        // 1. Miramos el estado de nuestro Pedido
+        const { data: pedido } = await supabase
           .from('Pedidos')
           .select('estatus')
           .eq('id', pedidoId)
           .single();
 
-        if (data && data.estatus === 'pagado') {
+        if (pedido && pedido.estatus === 'pagado') {
+          // ÉXITO: El webhook actualizó el pedido directamente
           clearInterval(interval);
           
           const boletosData = await fetchBoletos();
@@ -409,21 +410,39 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
             });
             setmodalConfirmacionOTP(true);
           }
-        } else if (data && (data.estatus === 'rechazado' || data.estatus === 'reversado')) {
-          // El Webhook detectó un error (monto menor, red fallida) y cambió el estatus
+        } else if (pedido && (pedido.estatus === 'rechazado' || pedido.estatus === 'reversado')) {
+          // RECHAZO
           clearInterval(interval);
           setRespuestaPago({
             success: false,
             status: "RECHAZADO",
-            message: "El pago fue rechazado. Verifique que el monto transferido sea el exacto o intente nuevamente.",
+            message: "El pago fue rechazado por monto insuficiente o error bancario.",
             reference: paymentData.referencia,
             id: pedidoId
           });
           setmodalConfirmacionOTP(true);
-        }
-      }, 3000); // Consulta cada 3 segundos
-    }
+        } else {
+          // 2. Si sigue pendiente, BUSCAMOS EN EL BUZÓN DEL BANCO
+          const { data: pagoRecibido } = await supabase
+            .from('pagos_recibidos')
+            .select('monto')
+            .eq('referencia', paymentData.referencia)
+            .eq('banco', paymentData.bank)
+            .single();
 
+          if (pagoRecibido) {
+            // ¡El banco mandó el webhook antes de que el usuario llenara el formulario!
+            if (pagoRecibido.monto >= parseFloat(totalAmount.toString())) {
+              // Monto correcto: Actualizamos a pagado. El próximo ciclo del intervalo detectará el éxito.
+              await supabase.from('Pedidos').update({ estatus: 'pagado' }).eq('id', pedidoId);
+            } else {
+              // Monto menor al esperado: Rechazamos.
+              await supabase.from('Pedidos').update({ estatus: 'rechazado' }).eq('id', pedidoId);
+            }
+          }
+        }
+      }, 3000); 
+    }
     return () => clearInterval(interval);
   }, [currentStep, pedidoId]);
 
@@ -848,7 +867,7 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
                 }
               }}
               required
-              placeholder="Ej. 83736278"
+              placeholder="Ej. 123456"
               className={errors.referencia ? "border-red-500 mt-2" : " mt-2"}
             />
             <p className="text-xs text-gray-500 mt-1">Escribe los últimos 6 dígitos de la referencia.</p>
