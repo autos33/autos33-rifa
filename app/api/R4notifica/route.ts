@@ -3,7 +3,6 @@ import { supabase } from "@/lib/supabase-client";
 
 export async function POST(request: Request) {
   try {
-    // 1. Validar el token de autorización [cite: 187]
     const authHeader = request.headers.get('Authorization');
     const expectedToken = process.env.R4_WEBHOOK_UUID_TOKEN || '';
 
@@ -12,36 +11,45 @@ export async function POST(request: Request) {
       return NextResponse.json({ abono: false }, { status: 401 });
     }
 
-    // 2. Extraer los datos de la notificación [cite: 203-211]
-    const body = await request.json();
+    const body = await request.json();    
     const { Referencia, BancoEmisor, Monto, CodigoRed, TelefonoEmisor } = body;
+    const referenciaCorta = Referencia.slice(-6); // últimos 6 digitos de  referencia bancaria
+    const bancoCorto = parseInt(BancoEmisor, 10).toString();
 
-    // 3. Validar el estado de la red interbancaria [cite: 228, 229]
+    // 1. Verificar si la red interbancaria rechazó el pago
     if (CodigoRed !== "00") {
-      console.log(`Transacción fallida en red. Código: ${CodigoRed}`);
-      return NextResponse.json({ abono: false }); // [cite: 217]
+      const { data: p } = await supabase
+      .from('Pedidos')
+      .select('id')
+      .eq('referencia_bancaria', referenciaCorta)
+      .eq('estatus', 'pendiente')
+      .single();
+      if (p) await supabase.from('Pedidos').update({ estatus: 'rechazado' }).eq('id', p.id);
+      
+      return NextResponse.json({ abono: false }); 
     }
 
-    // 4. Verificación de Referencia y Banco [cite: 184]
+    // 2. Verificación de Referencia y Banco
     const { data: pedidoPendiente, error: fetchError } = await supabase
       .from('Pedidos')
       .select('id, monto')
-      .eq('referencia_bancaria', Referencia)
-      .eq('banco_emisor', BancoEmisor)
+      .eq('referencia_bancaria', referenciaCorta)
+      .eq('banco_emisor', bancoCorto)
       .eq('estatus', 'pendiente')
       .single();
 
     if (fetchError || !pedidoPendiente) {
-      console.warn(`Notificación rechazada: Referencia ${Referencia} no encontrada o ya procesada.`);
-      return NextResponse.json({ abono: false }); // [cite: 217]
+      console.warn(`Notificación rechazada: Ref ${Referencia} del banco ${BancoEmisor} no encontrada.`);
+      return NextResponse.json({ abono: false }); 
     }
 
+    // 3. Verificar si el cliente transfirió menos dinero del que debía
     if (parseFloat(Monto) < parseFloat(pedidoPendiente.monto)) {
-        console.warn(`Notificación rechazada: Monto insuficiente para Referencia ${Referencia}.`);
-       return NextResponse.json({ abono: false }); // [cite: 217]
+      console.warn(`Notificación rechazada: Monto insuficiente para Referencia ${Referencia}.`);
+      await supabase.from('Pedidos').update({ estatus: 'rechazado' }).eq('id', pedidoPendiente.id);
+      return NextResponse.json({ abono: false }); 
     }
 
-    // 5. Actualizar el pedido a 'pagado'
     const { error: updateError } = await supabase
       .from('Pedidos')
       .update({ 
@@ -54,9 +62,7 @@ export async function POST(request: Request) {
       console.error("Error actualizando en Supabase:", updateError);
       return NextResponse.json({ abono: false }, { status: 500 });
     }
-
-    console.log(`Pago procesado exitosamente. Referencia: ${Referencia}`);
-    return NextResponse.json({ abono: true }); // [cite: 213]
+    return NextResponse.json({ abono: true }); 
 
   } catch (error) {
     console.error("Error en el webhook /R4notifica:", error);
