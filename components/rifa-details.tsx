@@ -70,7 +70,6 @@ export function RifaDetails({ rifa }: RifaDetailsProps) {
           >
             {rifa.estado}
           </Badge>
-          <span className="text-muted-foreground">Rifa #{rifa.id}</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">{rifa.titulo}</h1>
       </div>
@@ -136,19 +135,21 @@ export function RifaDetails({ rifa }: RifaDetailsProps) {
                 </div>
                 */}
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Calendar className="h-4 w-4 text-primary" />
-                    <span className="text-sm text-muted-foreground">Fecha del sorteo</span>
+                {rifa.fecha_culminacion && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="h-4 w-4 text-primary" />
+                      <span className="text-sm text-muted-foreground">Fecha del sorteo</span>
+                    </div>
+                    <span>
+                      {new Date(rifa.fecha_culminacion).toLocaleDateString("es-ES", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric"
+                      }).replace(/^(\d{2}) ([a-záéíóúñ]+) (\d{4})$/, "$1 de $2, $3")}
+                    </span>
                   </div>
-                  <span>
-                    {new Date(rifa.fecha_culminacion).toLocaleDateString("es-ES", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric"
-                    }).replace(/^(\d{2}) ([a-záéíóúñ]+) (\d{4})$/, "$1 de $2, $3")}
-                  </span>
-                </div>
+                )}
               </div>
 
               {/* Progress */}
@@ -328,20 +329,21 @@ export function RifaDetails({ rifa }: RifaDetailsProps) {
                   <span className="font-semibold text-primary">{remainingTickets.toLocaleString()}</span>
                 </div>
                 */}
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Calendar className="h-4 w-4 text-primary" />
-                    <span className="text-sm text-muted-foreground">Fecha del sorteo</span>
+                {rifa.fecha_culminacion && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="h-4 w-4 text-primary" />
+                      <span className="text-sm text-muted-foreground">Fecha del sorteo</span>
+                    </div>
+                    <span>
+                      {new Date(rifa.fecha_culminacion).toLocaleDateString("es-ES", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric"
+                      }).replace(/^(\d{2}) ([a-záéíóúñ]+) (\d{4})$/, "$1 de $2, $3")}
+                    </span>
                   </div>
-                  <span>
-                    {new Date(rifa.fecha_culminacion).toLocaleDateString("es-ES", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric"
-                    }).replace(/^(\d{2}) ([a-záéíóúñ]+) (\d{4})$/, "$1 de $2, $3")}
-                  </span>
-                </div>
+                )}
               </div>
 
               {/* Progress */}
@@ -462,7 +464,12 @@ export function RifaDetails({ rifa }: RifaDetailsProps) {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
+              {rifa.fecha_culminacion && (
               <p>• El sorteo se realizará en la fecha programada</p>
+              )}
+              {!rifa.fecha_culminacion && (
+              <p>• El sorteo se realizará al vender la totalidad de los boletos</p>
+              )}
               <p>• El sorteo se realiza en base a los resultados de Super Gana</p>
               <p>• Los números de boletos se asignan automáticamente</p>
               <p>• El primer premio será el resultado de Super Gana 10:00 p.m.</p>

@@ -318,10 +318,10 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
           if (error) {
             // Manejo del Unique Constraint (referencia duplicada)
             if (error.code === '23505') {
-               setFeedback("Esta referencia ya fue registrada para este banco. Verifica los datos.");
+              setFeedback("Esta referencia ya fue registrada para este banco. Verifica los datos.");
             } else {
-               setFeedback("Error guardando el reporte de pago. Intenta nuevamente.");
-               console.error(error);
+              setFeedback("Error guardando el reporte de pago. Intenta nuevamente.");
+              console.error(error);
             }
             return;
           }
@@ -643,7 +643,6 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
 
         <form onSubmit={handlePaymentSubmit} className="space-y-6">
           <h3 className="font-semibold text-gray-800">Paso 2: Reporta tu pago aquí</h3>
-          
           <div>
             <Label htmlFor="bank">Banco desde donde transferiste *</Label>
             <Select
