@@ -110,13 +110,17 @@ const styles = StyleSheet.create({
 
 const MyDocument = ({ data }) => {
   const { nombreRifa, fechaJuego, cedula, boletos } = data;
-  const fecha_formateada = new Date(fechaJuego)
-    .toLocaleDateString("es-ES", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric"
-    }).replace(/^(\d{2}) ([a-záéíóúñ]+) (\d{4})$/, " $1 de $2, $3");
-  
+  var fecha_formateada;
+  if (!fechaJuego) {
+    fecha_formateada = "---";
+  } else {
+    fecha_formateada = new Date(fechaJuego)
+      .toLocaleDateString("es-ES", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+      }).replace(/^(\d{2}) ([a-záéíóúñ]+) (\d{4})$/, " $1 de $2, $3");
+  }  
   const boletosPorPagina = 20; // 5 columnas x 4 filas
   const paginasDeBoletos = [];
   for (let i = 0; i < boletos.length; i += boletosPorPagina) {
