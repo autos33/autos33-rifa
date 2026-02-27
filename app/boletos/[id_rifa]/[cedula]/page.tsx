@@ -209,7 +209,7 @@ export default function ComprarPage({ params }: ComprarPageParams) {
                 <p className="text-muted-foreground mb-6">
                 No se encontraron boletos comprados con esa cédula para la rifa <strong>{rifa.titulo}</strong>.
                 </p>
-                <Link href={`/rifa/${rifa.id}`} className="mt-4 inline-block">
+                <Link href={`/rifa/${codificarId(rifa.id)}`} className="mt-4 inline-block">
                     <Button>Comprar Boletos</Button>
                 </Link>
             </div>
