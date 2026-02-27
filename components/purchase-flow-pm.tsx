@@ -160,11 +160,11 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
       newQuantity = 0;
     } else {
       newQuantity = Number.parseInt(value);
-      if (buyerData.ticketQuantity === 0 && newQuantity > 0 && newQuantity <= 100) {
+      if (buyerData.ticketQuantity === 0 && newQuantity > 0 && newQuantity <= 5000) {
         newQuantity = newQuantity;
       }
     }
-    if (newQuantity >= 0 && newQuantity <= 100){
+    if (newQuantity >= 0 && newQuantity <= 5000){
       setBuyerData({...buyerData, ticketQuantity: newQuantity,});
     }
   }
