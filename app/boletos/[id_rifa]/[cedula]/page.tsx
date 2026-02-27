@@ -196,6 +196,7 @@ export default function ComprarPage({ params }: ComprarPageParams) {
   }
   
   const ticketNumbers = boletos ? boletos.map(b => b.numero_boleto) : [];
+  const boletosAleatorios = boletos ? [...boletos].sort(() => Math.random() - 0.5) : [];
   
   if (boletos && boletos.length === 0) {
     return (
@@ -281,9 +282,9 @@ export default function ComprarPage({ params }: ComprarPageParams) {
                       </div>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                      {ticketNumbers.map((number, index) => (
+                      {boletosAleatorios.map((boleto, index) => (
                         <Badge key={index} variant="outline" className="flex justify-center items-center text-lg py-2 px-3 font-mono">
-                          {number.toString().padStart(4, "0")}
+                          {boleto.numero_boleto.toString().padStart(4, "0")}
                         </Badge>
                       ))}
                     </div>
