@@ -426,9 +426,10 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
           const { data: pagoRecibido } = await supabase
             .from('pagos_recibidos')
             .select('monto')
-            .eq('referencia', paymentData.referencia)
+            .like('referencia', `%${paymentData.referencia}`)
             .eq('banco', paymentData.bank)
-            .single();
+            .limit(1) 
+            .maybeSingle();
 
           if (pagoRecibido) {
             // ¡El banco mandó el webhook antes de que el usuario llenara el formulario!

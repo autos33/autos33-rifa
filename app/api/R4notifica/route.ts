@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
     // 1. GUARDAMOS EL PAGO EN EL BUZÓN (pagos_recibidos)
     await supabase.from('pagos_recibidos').upsert({
-        referencia: referenciaCorta,
+        referencia: Referencia,
         banco: bancoCorto,
         monto: parseFloat(Monto)
     }, { onConflict: 'referencia, banco' });
