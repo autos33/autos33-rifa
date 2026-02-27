@@ -212,8 +212,8 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
     if (!buyerData.email.trim()) newErrors.email = "El correo es requerido"
     if (!buyerData.phonePrefix) newErrors.phonePrefix = "El prefijo es requerido"
     if (!buyerData.phoneNumber.trim()) newErrors.phoneNumber = "El número es requerido"
-    if (buyerData.ticketQuantity < 1 || buyerData.ticketQuantity > 100) {
-      newErrors.ticketQuantity = "Cantidad debe estar entre 1 y 100"
+    if (buyerData.ticketQuantity < 1 || buyerData.ticketQuantity > 5000) {
+      newErrors.ticketQuantity = "Cantidad debe estar entre 1 y 5000"
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -616,12 +616,12 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
           </div>
 
           <div>
-            <Label htmlFor="ticketQuantity">Cantidad de Boletos (1-100) *</Label>
+            <Label htmlFor="ticketQuantity">Cantidad de Boletos (1-5000) *</Label>
             <Input
               id="ticketQuantity"
               type="text"
               minLength={1}
-              maxLength={3}
+              maxLength={4}
               value={buyerData.ticketQuantity}
               onChange={(e) => cambiarValorCantidadBoletos(e.target.value)}
               required
