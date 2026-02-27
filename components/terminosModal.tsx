@@ -32,43 +32,49 @@ export function TerminosModal() {
   return (
     <>
     {modalTerminos && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-transparent bg-opacity-30 backdrop-blur-sm">
-          <div className="flex flex-col item-center justify-center bg-white rounded-lg shadow-lg p-8 max-w-sm md:max-w-lg w-full mx-5">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm">
+          {/* Añadimos max-h-[85vh] para que nunca supere el 85% del alto de la pantalla */}
+          <div className="flex flex-col bg-white rounded-lg shadow-lg p-6 max-w-sm md:max-w-lg w-full mx-4 max-h-[85vh]">
             
-            <div className="flex flex-col gap-2 mb-4">
+            {/* Cabecera del modal (flex-none para que no se encoja) */}
+            <div className="flex-none flex flex-col gap-2 mb-4">
               <p className="text-center font-bold text-black text-2xl">
-                Terminos y Condiciones
+                Términos y Condiciones
               </p>
-              <p className="text-center font-medium text-black text-md">
+              <p className="text-center font-medium text-gray-600 text-sm md:text-md">
                 Lea detenidamente cada uno de ellos
               </p>
             </div>
 
-            <div className="flex flex-col mx-2 border border-gray-300 mb-4 rounded-md p-4 max-h-96 overflow-y-auto">
+            {/* Contenedor de los términos (flex-1 para que ocupe el espacio disponible y overflow-y-auto para el scroll) */}
+            <div className="flex-1 overflow-y-auto mx-1 border border-gray-300 mb-4 rounded-md p-4">
               {terminos.map((termino, index) => (
-                <div key={index} className="mb-4">
-                  <div className="flex flex-row my-2 items-center">
-                    <Info className="text-primary mr-2" />
+                <div key={index} className="mb-4 last:mb-0">
+                  <div className="flex flex-row mb-2 items-center">
+                    <Info className="text-primary mr-2 h-5 w-5 flex-shrink-0" />
                     <h3 className="text-lg font-semibold text-black">{termino.titulo}</h3>
                   </div>
-                  <p className="text-gray-700 text-justify">{termino.contenido}</p>
+                  <p className="text-gray-700 text-sm md:text-base text-justify leading-relaxed">
+                    {termino.contenido}
+                  </p>
                 </div>
               ))}
             </div>
             
-            <div className="flex flex-col gap-2 mb-4">
-              <p className="text-center font-medium text-black text-md">
-                Al precionar 'Aceptar y Continuar' usted acepta nuestros terminos y condiciones
+            {/* Footer del modal (flex-none) */}
+            <div className="flex-none flex flex-col gap-4">
+              <p className="text-center font-medium text-gray-600 text-xs md:text-sm">
+                Al presionar 'Aceptar y Continuar' usted acepta nuestros términos y condiciones
               </p>
-            </div>
 
-            <div className="flex flex-row justify-center items-center">
-              <Button className="mx-2" onClick={() => setModalTerminos(false)}>
-                Aceptar y Continuar
-              </Button>
-              <Button variant="outline" className="mx-2" onClick={() => {window.location.href = "https://www.google.com"}}>
-                Cerrar
-              </Button>
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-3">
+                <Button className="w-full sm:w-auto" onClick={() => setModalTerminos(false)}>
+                  Aceptar y Continuar
+                </Button>
+                <Button variant="outline" className="w-full sm:w-auto" onClick={() => {window.location.href = "https://www.google.com"}}>
+                  Cerrar
+                </Button>
+              </div>
             </div>
 
           </div>

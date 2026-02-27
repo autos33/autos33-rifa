@@ -20,7 +20,7 @@
     }
 
     return (
-      <section className="relative min-h-screen flex items-center justify-center wave-divider mb-16">
+      <section className="relative min-h-[100svh] flex items-center justify-center wave-divider mb-16">
         {/* Background image with parallax effect */}
         <div
           className="absolute inset-0 parallax-bg"
