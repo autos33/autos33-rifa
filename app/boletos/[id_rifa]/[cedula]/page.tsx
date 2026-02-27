@@ -301,7 +301,7 @@ export default function ComprarPage({ params }: ComprarPageParams) {
                       </span>
                     </p>)}
                     {!rifa.fecha_culminacion && (
-                      <p>• El sorteo se realizará el al vender la totalidad de los boletos</p>
+                      <p>• El sorteo se realizará al vender la totalidad de los boletos</p>
                     )}
                     <p>• El sorteo se realiza en base a los resultados de Super Gana</p>
                     <p>• Los números de boletos se asignan automáticamente</p>

@@ -112,7 +112,7 @@ const MyDocument = ({ data }) => {
   const { nombreRifa, fechaJuego, cedula, boletos } = data;
   var fecha_formateada;
   if (!fechaJuego) {
-    fecha_formateada = "---";
+    fecha_formateada = "Se realizará al vender la totalidad de los boletos";
   } else {
     fecha_formateada = new Date(fechaJuego)
       .toLocaleDateString("es-ES", {
