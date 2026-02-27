@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"  
-import { Facebook, Instagram, Twitter, Phone, Mail, MapPin } from "lucide-react"
+import { Facebook, Instagram, Phone, Mail, MapPin, PartyPopper, CarFront } from "lucide-react"
 
 export function Footer() {
   return (
@@ -29,8 +29,14 @@ export function Footer() {
               <Link href="https://www.facebook.com/p/autos33_-100064301034403" className="text-gray-400 hover:text-primary transition-colors">
                 <Facebook className="h-5 w-5" />
               </Link>
-              <Link href="https://www.instagram.com/autos33_/" className="text-gray-400 hover:text-primary transition-colors">
+              <Link href="https://www.instagram.com/ganaconautos33" className="text-gray-400 hover:text-primary transition-colors">
                 <Instagram className="h-5 w-5" />
+              </Link>
+              <Link href="https://www.instagram.com/autos33premios" className="text-gray-400 hover:text-primary transition-colors">
+                <PartyPopper className="h-5 w-5" />
+              </Link>
+              <Link href="https://www.instagram.com/autos33_" className="text-gray-400 hover:text-primary transition-colors">
+                <CarFront className="h-5 w-5"/>
               </Link>
               {/* 
               <Link href="#" className="text-gray-400 hover:text-primary transition-colors">

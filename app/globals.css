@@ -125,12 +125,18 @@
   }
 }
 
-/* Added custom styles for parallax effect and wave dividers */
 .parallax-bg {
-  background-attachment: fixed;
+  background-attachment: scroll; 
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+/* El efecto Parallax solo se activará en tablets y computadoras */
+@media (min-width: 768px) {
+  .parallax-bg {
+    background-attachment: fixed;
+  }
 }
 
 .wave-divider {
