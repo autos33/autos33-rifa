@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ abono: false }, { status: 401 });
     }
     
-    const { Referencia, BancoEmisor, Monto, CodigoRed } = body;
+    const { Referencia, BancoEmisor, Monto, CodigoRed, TelefonoEmisor } = body;
 
     if (CodigoRed !== "00") {
       return NextResponse.json({ abono: false }); 
@@ -25,7 +25,8 @@ export async function POST(request: Request) {
     await supabase.from('pagos_recibidos').upsert({
         referencia: Referencia,
         banco: bancoCorto,
-        monto: parseFloat(Monto)
+        monto: parseFloat(Monto),
+        telefono_emisor: TelefonoEmisor
     }, { onConflict: 'referencia, banco' });
 
     // 2. Intentamos ver si el usuario ya llenó el Paso 2 en el frontend
