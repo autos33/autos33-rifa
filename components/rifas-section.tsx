@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, DollarSign, Banknote } from "lucide-react"
 import { codificarId } from "@/lib/hashids"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 interface Rifa {
   id: number
@@ -23,6 +24,7 @@ interface Rifa {
 }
 
 export function RifasSection() {
+  const router = useRouter()
   const [rifas, setRifas] = useState<Rifa[]>([]) 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -120,7 +122,14 @@ export function RifasSection() {
             rifas.map((rifa) => (
               <Card
                 key={rifa.id}
-                className="bg-card border-border shadow-lg hover:shadow-xl transition-shadow duration-300"
+                onClick={() => {
+                  if (rifa.estado === "activa") {
+                    router.push(`/rifa/${codificarId(rifa.id)}`)
+                  }
+                }}
+                className={`bg-card border-border shadow-lg hover:shadow-xl transition-all duration-300 ${
+                  rifa.estado === "activa" ? "cursor-pointer hover:-translate-y-1" : ""
+                }`}
               >
                 <CardContent className="p-0">
                   <div className="grid lg:grid-cols-2 gap-0">
