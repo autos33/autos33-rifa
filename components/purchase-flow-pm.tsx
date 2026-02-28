@@ -160,11 +160,11 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
       newQuantity = 0;
     } else {
       newQuantity = Number.parseInt(value);
-      if (buyerData.ticketQuantity === 0 && newQuantity > 0 && newQuantity <= 5000) {
+      if (buyerData.ticketQuantity === 0 && newQuantity > 0 && newQuantity <= 1000) {
         newQuantity = newQuantity;
       }
     }
-    if (newQuantity >= 0 && newQuantity <= 5000){
+    if (newQuantity >= 0 && newQuantity <= 1000){
       setBuyerData({...buyerData, ticketQuantity: newQuantity,});
     }
   }
@@ -212,8 +212,8 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
     if (!buyerData.email.trim()) newErrors.email = "El correo es requerido"
     if (!buyerData.phonePrefix) newErrors.phonePrefix = "El prefijo es requerido"
     if (!buyerData.phoneNumber.trim()) newErrors.phoneNumber = "El número es requerido"
-    if (buyerData.ticketQuantity < 1 || buyerData.ticketQuantity > 5000) {
-      newErrors.ticketQuantity = "Cantidad debe estar entre 1 y 5000"
+    if (buyerData.ticketQuantity < 1 || buyerData.ticketQuantity > 1000) {
+      newErrors.ticketQuantity = "Cantidad debe estar entre 1 y 1000"
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -616,7 +616,7 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
           </div>
 
           <div>
-            <Label htmlFor="ticketQuantity">Cantidad de Boletos (1-5000) *</Label>
+            <Label htmlFor="ticketQuantity">Cantidad de Boletos (1-1000) *</Label>
             <Input
               id="ticketQuantity"
               type="text"
