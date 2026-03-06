@@ -7,7 +7,7 @@ import ShareTicketButton from "@/components/ShareTicketButton"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle, Download, Check, Copy, Loader2 } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { supabase } from "@/lib/supabase-client" 
 import { codificarId } from "@/lib/hashids"
 import { decodificarId } from "@/lib/hashids"
@@ -160,6 +160,11 @@ export default function ComprarPage({ params }: ComprarPageParams) {
     }
   };
   
+  const ticketNumbers = boletos ? boletos.map(b => b.numero_boleto) : [];
+  const boletosAleatorios = useMemo(() => {
+    return boletos ? [...boletos].sort(() => Math.random() - 0.5) : [];
+  }, [boletos]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen">
@@ -194,9 +199,6 @@ export default function ComprarPage({ params }: ComprarPageParams) {
         </div>
     )
   }
-  
-  const ticketNumbers = boletos ? boletos.map(b => b.numero_boleto) : [];
-  const boletosAleatorios = boletos ? [...boletos].sort(() => Math.random() - 0.5) : [];
   
   if (boletos && boletos.length === 0) {
     return (
