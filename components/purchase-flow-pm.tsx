@@ -557,13 +557,12 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
           </div>
 
           <div>
-            <Label htmlFor="email">Correo Electrónico *</Label>
+            <Label htmlFor="email">Correo Electrónico</Label>
             <Input
               id="email"
               type="email"
               value={buyerData.email}
               onChange={(e) => setBuyerData({ ...buyerData, email: e.target.value })}
-              required
               placeholder="tu@email.com"
               className={errors.email ? "border-red-500 mt-2" : " mt-2"}
             />

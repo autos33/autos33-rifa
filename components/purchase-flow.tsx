@@ -258,7 +258,6 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
 
     if (!buyerData.name.trim()) newErrors.name = "El nombre es requerido"
     if (!buyerData.cedula.trim()) newErrors.cedula = "La cédula es requerida"
-    if (!buyerData.email.trim()) newErrors.email = "El correo es requerido"
     if (!buyerData.phonePrefix) newErrors.phonePrefix = "El prefijo es requerido"
     if (!buyerData.phoneNumber.trim()) newErrors.phoneNumber = "El número es requerido"
     if (buyerData.ticketQuantity < 1 || buyerData.ticketQuantity > 100) {
@@ -598,13 +597,12 @@ export function PurchaseFlow({ rifa }: PurchaseFlowProps) {
           </div>
 
           <div>
-            <Label htmlFor="email">Correo Electrónico *</Label>
+            <Label htmlFor="email">Correo Electrónico</Label>
             <Input
               id="email"
               type="email"
               value={buyerData.email}
               onChange={(e) => setBuyerData({ ...buyerData, email: e.target.value })}
-              required
               placeholder="tu@email.com"
               className={errors.email ? "border-red-500 mt-2" : " mt-2"}
             />
