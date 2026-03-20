@@ -21,6 +21,7 @@ interface Rifa {
   ticketsSold?: number
   cantidad_boletos: number
   porcentaje_venta: number | null
+  mostrar_porcentaje: boolean | null
 }
 
 export function RifasSection() {
@@ -180,26 +181,28 @@ export function RifasSection() {
                         </div>
 
                         {/* Progress bar */}
-                        <div className="mb-6">
-                          <div className="flex justify-between text-sm text-muted-foreground mb-2">
-                            <span>Progreso de venta</span>
-                            <span>
-                              {rifa.porcentaje_venta !== null 
-                                ? rifa.porcentaje_venta 
-                                : Math.round(((rifa.ticketsSold ?? 0) / rifa.cantidad_boletos) * 100)}%
-                            </span>
-                          </div>
-                          <div className="w-full bg-muted rounded-full h-2">
-                            <div
-                              className="bg-primary h-2 rounded-full transition-all duration-300"
-                              style={{ 
-                                width: `${rifa.porcentaje_venta !== null 
+                        {rifa.mostrar_porcentaje && (
+                          <div className="mb-6">
+                            <div className="flex justify-between text-sm text-muted-foreground mb-2">
+                              <span>Progreso de venta</span>
+                              <span>
+                                {rifa.porcentaje_venta !== null 
                                   ? rifa.porcentaje_venta 
-                                  : Math.round(((rifa.ticketsSold ?? 0) / rifa.cantidad_boletos) * 100)}%` 
-                              }}
-                            />
+                                  : Math.round(((rifa.ticketsSold ?? 0) / rifa.cantidad_boletos) * 100)}%
+                              </span>
+                            </div>
+                            <div className="w-full bg-muted rounded-full h-2">
+                              <div
+                                className="bg-primary h-2 rounded-full transition-all duration-300"
+                                style={{ 
+                                  width: `${rifa.porcentaje_venta !== null 
+                                    ? rifa.porcentaje_venta 
+                                    : Math.round(((rifa.ticketsSold ?? 0) / rifa.cantidad_boletos) * 100)}%` 
+                                }}
+                              />
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
 
                       <Link href={rifa.estado === "activa" ? `/rifa/${codificarId(rifa.id)}` : "#"}>
