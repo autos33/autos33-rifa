@@ -721,7 +721,7 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
                   <span className="font-bold">J-507612490</span>
                   <button
                     type="button"
-                    onClick={() => handleCopyField(`${paymentData.senderCedula}`, 'cedula')}
+                    onClick={() => handleCopyField('507612490', 'cedula')}
                     className="p-1.5 rounded-md bg-blue-100 hover:bg-blue-200 transition-all active:scale-90"
                     title="Copiar cédula"
                   >
