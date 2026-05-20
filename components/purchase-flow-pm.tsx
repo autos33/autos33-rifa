@@ -101,7 +101,7 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
   
   const [modalConfirmacionCompra, setmodalConfirmacionCompra] = useState(false);
   const [modalConfirmacionOTP, setmodalConfirmacionOTP] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState(2)
   const [copied, setCopied] = useState(false)
   const [buyerData, setBuyerData] = useState<BuyerData>({
     name: "",
@@ -689,7 +689,6 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
             <h3 className="font-semibold text-blue-800">Paso 1: Realiza un Pago Movil a estos Datos</h3>
             
             <div className="space-y-3 text-sm text-blue-900">
-              {/* BANCO (Sin botón de copiar porque normalmente se selecciona en una lista) */}
               <div className="flex justify-between items-center border-b border-blue-100 pb-2">
                 <span className="font-medium">Banco:</span>
                 <span className="font-bold">R4 BANCO MICROFINANCIERO (0169)</span>
@@ -719,7 +718,7 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
               <div className="flex justify-between items-center border-b border-blue-100 pb-2">
                 <span className="font-medium">RIF/Cédula:</span>
                 <div className="flex items-center gap-2">
-                  <span className="font-bold">{paymentData.cedulaPrefijo}{paymentData.senderCedula}</span>
+                  <span className="font-bold">J-507612490</span>
                   <button
                     type="button"
                     onClick={() => handleCopyField(`${paymentData.senderCedula}`, 'cedula')}
