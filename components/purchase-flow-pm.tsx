@@ -101,7 +101,7 @@ export function PurchaseFlowPM({ rifa }: PurchaseFlowProps) {
   
   const [modalConfirmacionCompra, setmodalConfirmacionCompra] = useState(false);
   const [modalConfirmacionOTP, setmodalConfirmacionOTP] = useState(false);
-  const [currentStep, setCurrentStep] = useState(2)
+  const [currentStep, setCurrentStep] = useState(1)
   const [copied, setCopied] = useState(false)
   const [buyerData, setBuyerData] = useState<BuyerData>({
     name: "",
